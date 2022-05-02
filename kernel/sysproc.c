@@ -97,18 +97,15 @@ sys_pgaccess(void)
   }
 
   pagetable_t cur_pt = myproc()->pagetable;
-  vmprint(cur_pt);
   for(int i = 0; i < check_num; i++) {
     pte_t *pte = walk(cur_pt, starting_va + i * PGSIZE, 0);
     if((*pte & PTE_A) != 0) {
-      printf("hit: %d\n", i);
       abits |= (1 << i);
       *pte &= ~PTE_A;
     }
   }
 
-  printf("abits:%ld\n", abits);
-  return copyout(cur_pt, buffer_addr, (char *)&abits, sizeof(uint64));
+  return copyout(cur_~t, buffer_addr, (char *)&abits, sizeof(uint64));
 }
 #endif
 
