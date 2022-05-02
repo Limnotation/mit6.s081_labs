@@ -81,7 +81,34 @@ int
 sys_pgaccess(void)
 {
   // lab pgtbl: your code here.
-  return 0;
+  uint64 starting_va;
+  int check_num;
+  uint64 buffer_addr;
+  uint64 abits = 0;
+
+  if(argaddr(0, &starting_va) < 0) {
+    return -1;
+  }
+  if(argint(1, &check_num) < 0 || check_num > 32) {
+    return -1;
+  }
+  if(argaddr(2, &buffer_addr) < 0) {
+    return -1;
+  }
+
+  pagetable_t cur_pt = myproc()->pagetable;
+  vmprint(cur_pt);
+  for(int i = 0; i < check_num; i++) {
+    pte_t *pte = walk(cur_pt, starting_va + i * PGSIZE, 0);
+    if((*pte & PTE_A) != 0) {
+      printf("hit: %d\n", i);
+      abits |= (1 << i);
+      *pte &= ~PTE_A;
+    }
+  }
+
+  printf("abits:%ld\n", abits);
+  return copyout(cur_pt, buffer_addr, (char *)&abits, sizeof(uint64));
 }
 #endif
 
