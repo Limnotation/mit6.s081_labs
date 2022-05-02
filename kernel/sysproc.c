@@ -105,7 +105,7 @@ sys_pgaccess(void)
     }
   }
 
-  return copyout(cur_~t, buffer_addr, (char *)&abits, sizeof(uint64));
+  return copyout(cur_pt, buffer_addr, (char *)&abits, sizeof(uint64));
 }
 #endif
 
